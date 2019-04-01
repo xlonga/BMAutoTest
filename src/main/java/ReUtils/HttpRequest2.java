@@ -1,5 +1,4 @@
-package apicase;
-
+package ReUtils;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -11,39 +10,31 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * post/get请求封装
- */
-public class LoginCase3 {
+public class HttpRequest2 {
 
-    @Test
-    public void doByPost(String url , List<BasicNameValuePair>parameters,String charset){
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+    public void  do_testByPost(String url, List<BasicNameValuePair> parameters){
+
+        CloseableHttpClient httpClient= HttpClients.createDefault();
+        CloseableHttpResponse httpResponse = null;
         HttpPost httpPost = new HttpPost(url);
-
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(parameters,charset));
-
-            CloseableHttpResponse httpResponse =httpClient.execute(httpPost);
-
+            httpPost.setEntity(new UrlEncodedFormEntity(parameters,"UTF-8"));
+            httpResponse = httpClient.execute(httpPost);
             int code = httpResponse.getStatusLine().getStatusCode();
             String bodydata = EntityUtils.toString(httpResponse.getEntity());
             String headall = Arrays.toString(httpResponse.getAllHeaders());
-
             System.out.println("请求响应码"+"【"+code+ "】");
             System.out.println("请求体"+"【"+bodydata+ "】");
             System.out.println("请求头"+"【"+headall+ "】");
-
-
             httpResponse.close();
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
@@ -59,24 +50,20 @@ public class LoginCase3 {
         }
     };
 
+    public void  do_testByGost(String url, List<BasicNameValuePair> parameters){
 
-    @Test
-    public void doByGet(String url ,List<BasicNameValuePair>parmeget,String charset){
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        url += ("?")+ URLEncodedUtils.format(parmeget,charset);
+        CloseableHttpClient httpClient= HttpClients.createDefault();
+        CloseableHttpResponse httpResponse = null;
+        url += ("?"+ URLEncodedUtils.format(parameters,"UTF-8"));
         HttpGet httpGet = new HttpGet(url);
         try {
-            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             int code = httpResponse.getStatusLine().getStatusCode();
             String bodydata = EntityUtils.toString(httpResponse.getEntity());
             String headall = Arrays.toString(httpResponse.getAllHeaders());
-
             System.out.println("请求响应码"+"【"+code+ "】");
             System.out.println("请求体"+"【"+bodydata+ "】");
             System.out.println("请求头"+"【"+headall+ "】");
-
-
             httpResponse.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,7 +74,6 @@ public class LoginCase3 {
                 e.printStackTrace();
             }
         }
-
 
     };
 
