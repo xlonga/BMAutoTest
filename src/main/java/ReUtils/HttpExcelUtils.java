@@ -1,43 +1,53 @@
 package ReUtils;
 
+
 import org.apache.poi.ss.usermodel.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class HttpExcelUtils {
 
-    public static void main(String[] args) throws IOException {
+    public static Object[][] reads(int[] rows, int[] cells) {
 
 
         /**
          * 单个单元格
          */
-        InputStream inputStream = new FileInputStream(new  File("src\\main\\resources\\接口测试用例V1.0.xlsx"));
-        Workbook workbook = WorkbookFactory.create(inputStream);
+        InputStream inputStream = null;
+        Workbook workbook = null;
+        Object[][] datas = new Object[rows.length][cells.length];
+        try {
+            inputStream = new FileInputStream(new File("src\\main\\resources\\接口测试用例V1.0.xlsx"));
+            workbook = WorkbookFactory.create(inputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Sheet sheet = workbook.getSheet("接口信息");
-//        Row row = sheet.getRow(1);
-//
-//        Cell cell = row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-//        cell.setCellType(CellType.STRING);
-//        String cellValue = cell.getStringCellValue();
-//        System.out.println(cellValue);
 
+        for (int i = 0; i < rows.length; i++) {
+            Row row = sheet.getRow(rows[i] - 1);
+            for (int j = 0; j < cells.length; j++) {
+                //解决单元格为空的问题
+                Cell cell = row.getCell(cells[j]-1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                cell.setCellType(CellType.STRING);
+                String data = cell.getStringCellValue();
+                datas[i][j] = data;
+
+
+            }
+
+        }
+
+        return datas;
 
     }
 
-
-    /**
-     *  指定多个单元格
-     *
-     */
-
-
-
-
-
-
 }
+
+
+
+
+

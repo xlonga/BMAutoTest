@@ -1,13 +1,16 @@
 package apicase;
 
+import ReUtils.HttpExcelUtils;
 import ReUtils.HttpRequest2;
-import ReUtils.HttpRequestUtils;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Cases4 {
 
@@ -58,19 +61,40 @@ public class Cases4 {
 
 
 
-    @Test (dataProvider = "datas")
-    public void LoginCase2(String ACB051,String UCC003){
+    @Test (dataProvider = "dd1")
+    public void LoginCase2(String daparm){
         String url ="http://47.104.134.50:8666/ManagementPlatform/Account/Admin/v1.0/PhoneLogin";
         //String ACB501="13522352342";
         //String UCC003="E10ADC3949BA59ABBE56E057F20F883E";
 
         List<BasicNameValuePair> p2arm = new ArrayList<BasicNameValuePair>();
-        p2arm.add(new BasicNameValuePair("ACB501",ACB051));
-        p2arm.add(new BasicNameValuePair("UCC003",UCC003));
+        Map<String,String> sparma = (Map<String, String>) JSONObject.parse(daparm);
+        Set<String> keynames = sparma.keySet();
+        for (String keyname:keynames){
+            String keyValue = sparma.get(keynames);
+            p2arm.add(new BasicNameValuePair(keyname,keyValue));
+
+        }
+
+
 
         httpRequest2.do_testByPost(url,p2arm);
 
 
+    }
+
+
+
+
+    @DataProvider(name = "dd1")
+    public Object[][] dd(){
+
+        int[] row ={2,3,4,5};
+        int[] cells={8};
+
+     Object[][] datas= HttpExcelUtils.reads(row,cells);
+
+     return datas;
     }
 
 
