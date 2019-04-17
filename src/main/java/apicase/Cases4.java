@@ -2,13 +2,12 @@ package apicase;
 
 import ReUtils.HttpExcelUtils;
 import ReUtils.HttpRequest2;
-import ReUtils.HttpRequestUtils;
+import Utils.CaseUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ public class Cases4 {
         p2arm.add(new BasicNameValuePair("UCC003",UCC003));
 
         httpRequest2.do_testByPost(url,p2arm);
-
 
     }
 
@@ -63,56 +61,50 @@ public class Cases4 {
 
 
 
-    @Test (dataProvider = "d1")
-    public void LoginCase2(String ACB051,String UCC003){
+    @Test (dataProvider = "dd1")
+    public void LoginCase2(String daparm){
         String url ="http://47.104.134.50:8666/ManagementPlatform/Account/Admin/v1.0/PhoneLogin";
         //String ACB501="13522352342";
         //String UCC003="E10ADC3949BA59ABBE56E057F20F883E";
 
         List<BasicNameValuePair> p2arm = new ArrayList<BasicNameValuePair>();
-        p2arm.add(new BasicNameValuePair("ACB501",ACB051));
-        p2arm.add(new BasicNameValuePair("UCC003",UCC003));
+        Map<String,String> sparma = (Map<String, String>) JSONObject.parse(daparm);
+        Set<String> keynames = sparma.keySet();
+        for (String keyname:keynames){
+            String keyValue = sparma.get(keynames);
+            p2arm.add(new BasicNameValuePair(keyname,keyValue));
 
-        httpRequest2.do_testByPost(url,p2arm);
-
-
-    }
-    @DataProvider(name = "d1")
-    public Object[][]  testexceldata() throws FileNotFoundException {
-        int[] rows ={2,3,4,5};
-        int[] cells ={6};
-        Object[][] testexceldata = HttpExcelUtils.read(rows,cells);
-       //System.out.println(testexceldata.toString());
-
-        return testexceldata;
-    }
-
-
-
-    @Test (dataProvider = "d1")
-    public void LoginCase3(String parametsJson){
-        String url ="http://47.104.134.50:8666/ManagementPlatform/Account/Admin/v1.0/PhoneLogin";
-        //String ACB501="13522352342";
-        //String UCC003="E10ADC3949BA59ABBE56E057F20F883E";
-
-        List<BasicNameValuePair> p2arm = new ArrayList<BasicNameValuePair>();
-
-        Map<String,String> jsonMap =(Map<String, String>) JSONObject.parse(parametsJson);
-        Set<String> paramNames = jsonMap.keySet();//获取所有的key
-        for (String paramName:paramNames){
-           String paramValue = jsonMap.get(paramName);//通过key获取名
-         p2arm.add(new  BasicNameValuePair(paramName,paramValue));
         }
 
-//
-//        p2arm.add(new BasicNameValuePair("ACB501",ACB051));//属于硬编码
-//        p2arm.add(new BasicNameValuePair("UCC003",UCC003));
-
         httpRequest2.do_testByPost(url,p2arm);
 
 
     }
 
+
+
+
+    @DataProvider(name = "dd1")
+    public Object[][] dd(){
+        int[] row ={2,3,4,5};
+        int[] cells={8};
+     Object[][] datas= HttpExcelUtils.reads(row,cells);
+     return datas;
+    }
+
+
+    @DataProvider(name = "d2")
+    public Object[][] d2(){
+        String filepath="src\\main\\resources\\接口测试用例V1.0.xlsx";
+        String sheetName ="用例";
+        String [] cellName={"CaseID","Desc","Params"};
+        Object[][] datas = CaseUtils.datas(cellName);
+
+        for (Object[] objects:datas){
+            System.out.println(objects);
+        }
+        return datas;
+    }
 
 
 
