@@ -2,6 +2,7 @@ package apicase;
 
 import ReUtils.HttpExcelUtils;
 import ReUtils.HttpRequest2;
+import Utils.CaseUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.annotations.DataProvider;
@@ -29,7 +30,6 @@ public class Cases4 {
         p2arm.add(new BasicNameValuePair("UCC003",UCC003));
 
         httpRequest2.do_testByPost(url,p2arm);
-
 
     }
 
@@ -76,8 +76,6 @@ public class Cases4 {
 
         }
 
-
-
         httpRequest2.do_testByPost(url,p2arm);
 
 
@@ -88,14 +86,28 @@ public class Cases4 {
 
     @DataProvider(name = "dd1")
     public Object[][] dd(){
-
         int[] row ={2,3,4,5};
         int[] cells={8};
-
      Object[][] datas= HttpExcelUtils.reads(row,cells);
-
      return datas;
     }
+
+
+    @DataProvider(name = "d2")
+    public Object[][] d2(){
+        String filepath="src\\main\\resources\\接口测试用例V1.0.xlsx";
+        String sheetName ="用例";
+        String [] cellName={"CaseID","Desc","Params"};
+        Object[][] datas = CaseUtils.datas(cellName);
+
+        for (Object[] objects:datas){
+            System.out.println(objects);
+        }
+        return datas;
+    }
+
+
+
 
 
 
